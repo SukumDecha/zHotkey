@@ -1,0 +1,4 @@
+name: zHotkey
+version: '${project.version}'
+main: me.louderdev.zhotkey.ZHotkey
+api-version: 1.20

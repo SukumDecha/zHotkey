@@ -1,0 +1,6 @@
+command: "/shop"
+sound: "UI_BUTTON_CLICK"
+message:
+  - "------"
+  - "&aOpened Shop Gui"
+  - "------"
