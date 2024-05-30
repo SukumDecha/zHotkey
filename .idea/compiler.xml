@@ -9,8 +9,5 @@
         <module name="zHotkey" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="zHotkey" target="1.8" />
-    </bytecodeTargetLevel>
   </component>
 </project>

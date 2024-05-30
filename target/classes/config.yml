@@ -1,5 +1,10 @@
 command: "/shop"
-sound: "UI_BUTTON_CLICK"
+sound:
+    enabled: true
+    sound: "UI_BUTTON_CLICK"
+    volume: 1
+    pitch: 1
+
 message:
   - "------"
   - "&aOpened Shop Gui"

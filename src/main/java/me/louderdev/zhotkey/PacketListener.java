@@ -23,14 +23,13 @@ public class PacketListener {
 
     private ZHotkey main;
 
-    private ProtocolManager protocolManager;
     private LinkedList<UUID> playersUuid;
     private Props props;
 
     public PacketListener(ZHotkey main) {
         this.main = main;
         this.playersUuid = new LinkedList<>();
-        this.protocolManager = main.getProtocolManager();
+
 
         loadConfig(main.getConfigFile());
     }
@@ -38,12 +37,19 @@ public class PacketListener {
     private void loadConfig(ConfigFile c) {
         props = new Props();
 
+        props.setSoundEnabled(c.getBoolean("sound.enabled"));
         props.setCommand(c.getString("command"));
         props.setMessage(c.getStringList("message"));
 
         try  {
-            Sound sound = Sound.valueOf(c.getString("sound"));
-            props.setSound(sound);
+            Sound sound = Sound.valueOf(c.getString("sound.sound"));
+
+            SoundProps soundProps = new SoundProps();
+            soundProps.setType(sound);
+            soundProps.setVolume((float) c.getDouble("sound.volume"));
+            soundProps.setPitch((float) c.getDouble("sound.pitch"));
+
+            props.setSound(soundProps);
         } catch (Exception e) {
             Bukkit.getConsoleSender().sendMessage("Could not parse sound: " + c.getString("sound"));
         }
@@ -75,7 +81,11 @@ public class PacketListener {
 
                     Bukkit.getScheduler().runTaskLater(main, () -> {
                         player.chat(props.getCommand());
-                        player.playSound(player.getLocation(), props.getSound(),  0.2f, 0.2f);
+
+                        if(props.isSoundEnabled()) {
+                            player.playSound(player.getLocation(), props.getSound().getType(), props.getSound().getVolume(), props.getSound().getPitch());
+                        }
+
                         for(String msg : props.getMessage()) {
                             player.sendMessage(CC.translate(msg));
                         }
@@ -89,8 +99,16 @@ public class PacketListener {
 
     @Data
     class Props {
+        boolean soundEnabled;
         String command;
-        Sound sound;
+        SoundProps sound;
         List<String> message;
+    }
+
+    @Data
+    class SoundProps {
+        Sound type;
+        private float volume;
+        private float pitch;
     }
 }
